@@ -1,5 +1,8 @@
+use crate::reader::reader::loop_directory;
+
 mod document;
+mod reader;
 
 fn main() {
-    println!("Hello, world!");
+    loop_directory();
 }

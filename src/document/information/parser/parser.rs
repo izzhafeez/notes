@@ -38,7 +38,8 @@ pub fn get(c: char) -> Result<Parser, ()> {
     }
 }
 
-pub fn parse(p: Parser, s: &str) -> Result<String, ()> {
+pub fn parse(p: Parser, raw_string: &str) -> Result<String, ()> {
+    let s = &raw_string[3..];
     match p {
         Parser::ANCESTOR => Ok(parse_ancestor(s)),
         Parser::BENEFIT => Ok(parse_benefit(s)),
