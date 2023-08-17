@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
-pub fn loop_directory() -> Result<(), ()> {
+pub fn loop_directory() -> Result<HashMap<String, Vec<PathBuf>>, ()> {
     let paths = ls(PathBuf::from("./data"));
 
     let files: HashMap<String, Vec<PathBuf>> = paths
@@ -10,11 +10,7 @@ pub fn loop_directory() -> Result<(), ()> {
         .map(get_entries_from_dir)
         .collect();
 
-    for (k, v) in files {
-        println!("{} {:?}", k, v);
-    }
-
-    Ok(())
+    Ok(files)
 }
 
 fn ls(path: PathBuf) -> Vec<PathBuf> {
@@ -33,8 +29,7 @@ fn get_entries_from_dir(dir: PathBuf) -> (String, Vec<PathBuf>) {
         .unwrap()
         .to_string();
 
-    let subpaths: Vec<PathBuf> = ls(dir);
-    (dir_str, subpaths
+    (dir_str, ls(dir)
         .into_iter()
         .map(|p| p.join("Notes.tex"))
         .collect()
