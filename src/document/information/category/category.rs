@@ -22,7 +22,7 @@ pub enum Parser {
     RELATED,
 }
 
-pub fn get(c: char) -> Result<Parser, ()> {
+pub fn get_parser(c: char) -> Result<Parser, ()> {
     match c {
         'A' => Ok(Parser::ANCESTOR),
         'B' => Ok(Parser::BENEFIT),
