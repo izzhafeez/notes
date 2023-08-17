@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 use crate::document::information::parser::parser::{Parser, get, parse};
 
 pub struct Information {
@@ -21,5 +23,11 @@ impl Information {
     fn parse(&self) -> Result<String, ()> {
         let parser: Parser = self.get_parser()?;
         parse(parser, &self.text)
+    }
+}
+
+impl Display for Information {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.text)
     }
 }

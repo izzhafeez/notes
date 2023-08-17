@@ -1,4 +1,4 @@
-mod document;
+pub mod document;
 mod section;
 mod header;
 mod information;
