@@ -1,2 +1,2 @@
 pub mod information;
-mod parser;
+mod category;
