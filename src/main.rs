@@ -1,26 +1,26 @@
+use std::collections::HashMap;
+use std::path::PathBuf;
 use crate::document::document::Document;
 use crate::reader::directory_reader::loop_directory;
-use crate::reader::file_reader::{read_all_files, read_file};
+use crate::reader::file_reader::{read_all_files};
+use crate::writer::writer::write_json;
 
 mod document;
 mod reader;
+mod writer;
 
 fn main() -> Result<(), ()> {
-    let files = loop_directory()?;
-    let documents = files
+    let paths_map: HashMap<String, Vec<PathBuf>> = loop_directory()?;
+    let documents: HashMap<String, Vec<Document>> = paths_map
         .into_iter()
-        .map(|(k, v)| v)
-        .map(read_all_files)
-        .map(|v| v
+        .map(|(k, paths)| (k, read_all_files(paths)))
+        .map(|(k, texts)| (k, texts
             .into_iter()
-            .map(Document::parse)
-            .map(|s| s.unwrap().to_string())
-            .collect::<Vec<String>>()
-            .join("\n\n\n"))
-        .collect::<Vec<String>>()
-        .join("\n\n\n\n");
+            .map(|text| Document::parse(text).unwrap())
+            .collect()))
+        .collect();
 
-    println!("{}", documents);
+    write_json(documents).expect("Can't write.");
 
     Ok(())
 }
