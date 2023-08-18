@@ -1,11 +1,1 @@
-pub mod parser;
-mod benefit_parser;
-mod ancestor_parser;
-mod child_parser;
-mod property_parser;
-mod purpose_parser;
-mod example_parser;
-mod negative_parser;
-mod related_parser;
-mod definition_parser;
-mod explanation_parser;
+pub mod category;
