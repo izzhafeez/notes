@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter};
 use serde::{Serialize};
 use crate::document::information::category::category::get_category;
 
+/// A piece of information, that can be in any one of many categories.
 #[derive(Serialize)]
 pub struct Information {
     category: String,
@@ -9,6 +10,18 @@ pub struct Information {
 }
 
 impl Information {
+    /// Parses a single line of text into a piece of Information.
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - A string to be parsed.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// Information::parse("A: Matrix");
+    /// Information::parse("R: Triangle Matrix");
+    /// ```
     pub fn parse(s: &str) -> Result<Self, ()> {
         let text: String = s[3..].parse().unwrap();
         let first_letter = s

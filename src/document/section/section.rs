@@ -4,6 +4,7 @@ use serde::{Serialize};
 
 use crate::document::information::information::Information;
 
+/// A section is a topic in the notes (e.g. Identity Matrix).
 #[derive(Serialize)]
 pub struct Section {
     header: String,
@@ -12,9 +13,15 @@ pub struct Section {
 }
 
 impl Section {
+    /// Parses a paragraph of text into a section with a header, information, and related sections.
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - A paragraph string to be parsed.
     pub fn parse(s: &str) -> Result<Self, ()> {
         let raw_lines: Vec<&str> = s.split("\n").collect();
         let mut lines_iter = raw_lines.into_iter();
+        /// Header is the first line of the paragraph.
         let header: String = lines_iter
             .next()
             .unwrap()
@@ -31,6 +38,7 @@ impl Section {
             let category: String = i.get_category();
             let text: String = i.get_text();
             match category.as_str() {
+                /// These three are considered "Related" sections, as they point to other sections.
                 "Ancestors" | "Children" | "Related" => {
                     match related.get_mut(&category) {
                         Some(vec) => {
@@ -60,6 +68,20 @@ impl Section {
         self.header.to_string()
     }
 
+    /// Updates strings in related so that they match the header of another section.
+    /// This is the case because sometimes I want to type shorthands of headers to save time.
+    ///
+    /// # Arguments
+    ///
+    /// * `section` - A section to be updated.
+    /// * `headers_set` - The set of possible headers.
+    ///     Used to check in O(1) time if it is a perfect match.
+    /// * `headers_vec` - The vector of possible headers.
+    ///     Used to pattern match in O(n) time if it is a perfect match.
+    ///
+    /// # Returns
+    ///
+    /// A new section with updated related field.
     pub fn update_related(section: Section, headers_set: &HashSet<String>, headers_vec: &Vec<String>) -> Self {
         let header: String = section.header;
         let information: HashMap<String, Vec<String>> = section.information;

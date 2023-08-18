@@ -1,15 +1,24 @@
+#![crate_name = "doc"]
+
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 use serde::{Serialize};
 
 use crate::document::section::section::Section;
 
+/// A document captures the contents of a tex file.
 #[derive(Serialize)]
 pub struct Document {
+    /// A hashmap of section headings to sections.
     sections: HashMap<String, Section>
 }
 
 impl Document {
+    /// Reads the contents of a tex file and processes them into a Document.
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - A string representing the contents of a tex file.
     pub fn parse(s: String) -> Result<Self, ()> {
         let raw_sections: Vec<&str> = s
             .split("\n\n")
@@ -26,6 +35,20 @@ impl Document {
         Ok(Self { sections })
     }
 
+    /// Joins sections based on their Ancestors, Children and Related sections.
+    ///
+    /// # Arguments
+    ///
+    /// * `sections` - A hashmap of section headings to sections.
+    ///
+    /// # Returns
+    ///
+    /// * An updated hashmap of section headings to sections.
+    ///
+    /// # Examples
+    ///
+    /// For example, if section "Identity Matrix" has ancestor section "Matrix",
+    /// then it will join them together.
     fn join_sections(sections: HashMap<String, Section>) -> HashMap<String, Section> {
         let headers_set: HashSet<String> = sections
             .iter()
